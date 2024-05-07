@@ -20,7 +20,7 @@ hwasm : hwasm.c
 	gcc -Wall --ansi hwasm.c -o hwasm
 
 hw2.bin: hw2.o
-	ld -melf_i386 --oformat=binary -Ttext=0x7c00 hw2.o -o h2.bin
+	ld -melf_i386 --oformat=binary -Ttext=0x7c00 hw.o -o hw2.bin
 
 hw2.o: hw.S
 	as --32 hw.S -o hw.o
