@@ -1,0 +1,9 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: so2-MurilloMMartins
+Upstream-Contact: MurilloMMartins <murillomartins19@gmail.com>
+Source: https://github.com/courselab/so2-MurilloMMartins.git
+
+Files: */.dist
+Copyright: MurilloMMartins <murillomartins19@gmail.com>
+License: CC0-1.0
+
