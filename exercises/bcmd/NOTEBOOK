@@ -1,3 +1,11 @@
 #    SPDX-FileCopyrightText: 2024 MurilloMMartins <murillomartins19@gmail.com>
 #   
 #    SPDX-License-Identifier: GPL-3.0-or-later
+In this exercise I was first trying to get the total RAM and print to the screen.
+But soon realized that this was a very difficult task that probably wouldn't fit
+in the 512 bytes of the bootloader.
+So I decided to mess with video memory to see what I could do. With this idea in 
+mind, I implemented a function called drawSmiley, that takes x and y as an input
+and draws a smiley in that location (x and y can only be 1 character long). It 
+also uses the x and y location to style the smiling face with a color and back-
+ground.
