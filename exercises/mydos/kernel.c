@@ -43,7 +43,7 @@ void shell()
 {
   int i;
   clear();
-  kwrite ("TinyDOS 1.0\n");
+  kwrite ("gladOS 1.0\n");
 
   while (go_on)
     {
@@ -101,7 +101,7 @@ void f_help()
   kwrite ("...me, Obi-Wan, you're my only hope!\n\n");
   kwrite ("   But we can try also some commands:\n");
   kwrite ("      exec    (to execute an user program example\n");
-  kwrite ("      quit    (to exit TyDOS)\n");
+  kwrite ("      quit    (to exit gladOS)\n");
 }
 
 void f_quit()
