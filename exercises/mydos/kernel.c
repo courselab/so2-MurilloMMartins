@@ -127,6 +127,7 @@ void f_quit()
 extern int main();
 void f_exec()
 {
-  main();			/* Call the user program's 'main' function. */
+  // main();			/* Call the user program's 'main' function. */
+  kwrite("Running programs not implemented yet.\n");
 }
 
