@@ -12,7 +12,10 @@
 ## These are the rules of interest in this set of examples.
 ##
 
-
+# Rule to create a 1.44 MB floppy image
+disk.img:
+	rm -f $@
+	dd if=/dev/zero of=$@ count=2880
 
 # By default, the bootable program name will by $(dosname).bin
 # If you export this directory to extend the example as part of a programming
