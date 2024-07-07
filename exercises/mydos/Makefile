@@ -13,9 +13,9 @@
 ##
 
 # Rule to create a 1.44 MB floppy image
-disk.img:
-	rm -f $@
-	dd if=/dev/zero of=$@ count=2880
+disk:
+	rm -f disk.img
+	dd if=/dev/zero of=disk.img count=2880
 
 # By default, the bootable program name will by $(dosname).bin
 # If you export this directory to extend the example as part of a programming
@@ -27,6 +27,10 @@ dos=gladOS
 # Build the OS and an example user program.
 
 all: $(dos).bin prog.bin
+
+disk.img: $(dos).bin
+	dd if=$@ of=$(dos).bin bs=1 count=14 seek=2 conv=notrunc
+	dd if=$(dos).bin of=$@ bs=1 conv=notrunc
 
 # Link all objects needed by the OS.
 
