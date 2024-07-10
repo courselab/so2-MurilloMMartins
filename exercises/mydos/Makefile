@@ -28,6 +28,7 @@ dos=gladOS
 
 all: $(dos).bin prog.bin
 
+# Please, run "make (dos).img/run" to actually use the operating system.
 $(dos).img: $(dos).bin
 	rm -f $@
 	cp disk.img $@
