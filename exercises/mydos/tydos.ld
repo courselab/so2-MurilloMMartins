@@ -37,6 +37,7 @@ SECTIONS
 	{
 	  kernel.o     (.text .data .bss .rodata) /* The kernel itself.     */
 	  kaux.o       (.text .data .bss .rodata) /* Aux. kernel functions. */
+	  file_system.o(.text .data .bss .rodata)
 	  bios2.o      (.text .data .bss .rodata) /* More low-level code .  */
 	  syscall.o    (.text .data .bss .rodata) /* System calls.          */
 	  logo.o       (.rodata)		  /* Some ASCII "art".      */
@@ -58,6 +59,8 @@ SECTIONS
 	_KERNEL_SIZE = . - _KERNEL_ADDR; /* How many bytes we'll read.      */
 
 	_END_STACK = 0x7c00;	/* Place the stack bellow the program.      */
+
+	_MEMORY_POLL = .;
 	
 }
 STARTUP(rt0.o)			 /* Prepend with the start file. */

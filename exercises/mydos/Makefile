@@ -28,14 +28,16 @@ dos=gladOS
 
 all: $(dos).bin prog.bin
 
-disk.img: $(dos).bin
-	dd if=$@ of=$(dos).bin bs=1 count=14 seek=2 conv=notrunc
-	dd if=$(dos).bin of=$@ bs=1 conv=notrunc
+$(dos).img: $(dos).bin
+	rm -f $@
+	cp disk.img $@
+	dd if=$@ of=gladOS.bin bs=1 count=14 seek=2 conv=notrunc
+	dd if=gladOS.bin of=$@ bs=1 conv=notrunc
 
 # Link all objects needed by the OS.
 
-$(dos).bin : bootloader.o bios1.o kernel.o kaux.o bios2.o logo.o syscall.o 
-	ld -melf_i386 -T tydos.ld --orphan-handling=discard $^ -o $@
+$(dos).bin : bootloader.o bios1.o kernel.o kaux.o bios2.o logo.o syscall.o file_system.o
+	ld -melf_i386 -T tydos.ld -Map=output.map --orphan-handling=discard $^ -o $@
 
 # Here we are statically linking the user program 'prob.bin' into the kernel,
 # so as to simulate the execution of a user program. If we were to actually load
@@ -54,8 +56,8 @@ $(dos).bin : bootloader.o bios1.o kernel.o kaux.o bios2.o logo.o syscall.o
 	as -32 $< -o $@
 
 bootloader.o : bios1.h kernel.h 
-kernel.o : bios1.h bios2.h kernel.h kaux.h   
-kaux.o:    bios2.h kaux.h   
+kernel.o : bios1.h bios2.h kernel.h kaux.h file_system.h
+kaux.o:    bios2.h kaux.h
 
 $(dos).bin : .EXTRA_PREREQS = rt0.o tydos.ld
 
@@ -90,7 +92,7 @@ libtydos.a : libtydos.o
 .PHONY: clean
 
 clean:
-	rm -f *.bin *.o *~ *.s *.a
+	rm -f *.bin *.o *~ *.s *.a $(dos).img output.map
 
 
 ## Bintools: convenience rules for inspecting binary files
@@ -359,9 +361,9 @@ diffa32 da32 a32:
 %.iso : %.bin
 	xorriso -as mkisofs -b $< -o $@ -isohybrid-mbr $< -no-emul-boot -boot-load-size 4 ./
 
-%.img : %.bin
-	dd if=/dev/zero of=$@ bs=1024 count=1440
-	dd if=$< of=$@ seek=0 conv=notrunc
+# %.img : %.bin
+# 	dd if=/dev/zero of=$@ bs=1024 count=1440
+# 	dd if=$< of=$@ seek=0 conv=notrunc
 
 
 

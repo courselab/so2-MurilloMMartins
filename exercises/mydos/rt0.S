@@ -27,7 +27,7 @@ init0:
         movw %ax, %gs                
         movw %ax, %ss                
         mov $_END_STACK, %sp   	/* Set the stack right bellow the program.*/
-	mov %dl, boot_drive	/* Save boot drive nunver for later.      */
+		mov %dl, boot_drive	/* Save boot drive nunver for later.      */
         sti			/* Reenable interruptions.                */
         call boot		/* Call main().                           */
  halt:				/* Upon main()'s return, halt.            */

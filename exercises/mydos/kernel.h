@@ -33,6 +33,7 @@ void shell();			/* Command interpreter. */
 
 void f_help();
 void f_exec();
+void f_list();
 void f_quit();
 
 extern struct cmd_t
