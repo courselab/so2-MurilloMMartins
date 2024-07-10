@@ -28,6 +28,11 @@ int _tycall_ sys_write(const char* str)
   return 0;
 }
 
+int _tycall_ sys_read(char* buffer) {
+  kread(buffer);
+  return 0;
+}
+
 /*  Syscall 0 is invalid (should never be called)*/
 
 int _tycall_ sys_invalid ()

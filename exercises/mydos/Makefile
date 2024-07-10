@@ -65,7 +65,7 @@ $(dos).bin : .EXTRA_PREREQS = rt0.o tydos.ld
 # You would add new programs to this variable if bulding other user programs.
 # The user library is automatically added by the linker script.
 
-progs = prog.bin
+progs = prog.bin hello.bin
 
 $(progs)  : %.bin : %.o libtydos.a 
 	ld -melf_i386 -T prog.ld --orphan-handling=discard $< -o $@

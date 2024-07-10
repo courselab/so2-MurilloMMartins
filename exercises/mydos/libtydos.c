@@ -45,3 +45,7 @@ void puts(const char* str)
 {
   syscall (SYS_WRITE, (int) str,0,0);
 }
+
+void gets(const char* buffer) {
+   syscall(SYS_READ, (int) buffer, 0, 0);
+}
