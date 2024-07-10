@@ -17,12 +17,17 @@ SECTIONS
 	PRG_LOAD_ADDR = 0xFE00;	/* Program load address.              */
 	
         . = PRG_LOAD_ADDR;
+
+		.prepend :
+		{
+			crt0.o (.text .data .bdd .rodata)
+		}
 	
         .bin :
-	{
-          *.o   (.text .data .bss .rodata) /* Command line objects. */
-	  libtydos.o (.text .data .bss .rodata) /* Runtime library. */
-	}		
+		{
+        	*.o   (.text .data .bss .rodata) /* Command line objects. */
+	  		libtydos.o (.text .data .bss .rodata) /* Runtime library. */
+		}		
 }
 INPUT(libtydos.a)		/* Link with the TyDOS user library. */
 

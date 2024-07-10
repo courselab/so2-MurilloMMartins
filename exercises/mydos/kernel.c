@@ -21,29 +21,6 @@
 
 /* Kernel's entry function. */
 
-void load_disk_into_memory_k(int block_coordinate, int sectors_to_read, void *target_addres) {
-  int sector_coordinate = 1;
-  int head_coordinate = 0;
-  int cylinder_coordinate = 0;
-
-  __asm__ volatile(
-      "pusha \n"
-      "mov boot_drive, %%dl \n"    /* Select the boot drive (from rt0.o). */
-      "mov $0x2, %%ah \n"          /* BIOS disk service: op. read sector. */
-      "mov %[sectToRead], %%al \n" /* How many sectors to read          */
-      "mov %[cylCoord], %%ch \n"          /* Cylinder coordinate (starts at 0).  */
-      "mov %[sectCoord], %%cl \n"  /* Sector coordinate   (starts at 1).  */
-      "mov %[headCoord], %%dh \n"  /* Head coordinate     (starts at 0).      */
-      "mov %[targetAddr], %%bx \n" /* Where to load the file system (rt0.o).   */
-      "int $0x13 \n"               /* Call BIOS disk service 0x13.        */
-      "popa \n" ::
-      [headCoord] "g"(head_coordinate),
-      [sectCoord] "g"(sector_coordinate),
-      [cylCoord] "g"(cylinder_coordinate),
-      [sectToRead] "g"(sectors_to_read),
-      [targetAddr] "g"(target_addres));
-}
-
 void put_short(int num) {
     // Handle negative numbers
     if (num < 0) {
@@ -192,11 +169,48 @@ void f_quit()
 
   */
 
-extern int main();
 void f_exec()
 {
-  // main();			/* Call the user program's 'main' function. */
-  kwrite("Running programs not implemented yet.\n");
+  kwrite("Please give the program's name: ");
+  char program_name[10];
+  kread(program_name);
+
+  unsigned int header_address = FS_HEADER_MEMORY_LOCATION;
+  fs_header* header = get_fs_header((unsigned int *)header_address);
+
+  int first_sector = 1 + header->number_of_boot_sectors;
+  int sectors_to_read = header->number_of_file_entries * FILE_NAME_LEN / SECTOR_LEN;
+
+  extern char _MEMORY_POLL;
+  void *target_address = (void *)&_MEMORY_POLL;
+
+  load_disk_into_memory(first_sector, sectors_to_read, target_address);
+
+  int program_binary_index = -1;
+  for(int i = 0; i < header->number_of_file_entries; i++) {
+    char *file_name = target_address + i * FILE_NAME_LEN;
+    if(!file_name[0])
+      break;
+
+    if(!strcmp(file_name, program_name)) {
+      program_binary_index = i;
+      break;
+    }
+  }
+
+  if(program_binary_index == -1) {
+    kwrite("Program not found.\n");
+    return;
+  }
+
+  int bin_sector_location = first_sector + sectors_to_read + header->max_file_size * program_binary_index -1;
+  int memory_offset = header->number_of_file_entries * FILE_NAME_LEN - (sectors_to_read-1) * 512;
+  void *user_program_load_address = (void *)USER_PRG_LOAD_ADDR;
+  void *memory_location = user_program_load_address - memory_offset;
+
+  load_disk_into_memory(bin_sector_location, header->max_file_size, memory_location);
+
+  execute_program(memory_location);
 }
 
 void f_list() {

@@ -19,6 +19,8 @@
 #define LEFT    0		/* First column (left of the screen).    */
 #define RIGHT   (COLS -1)	/* Last column (right of the screen).    */
 
+#define USER_PRG_LOAD_ADDR 0xFE00
+
 extern char character_color;    /* Default fore/background char color.   */
 
 void splash(void);		/* Draw the splash screen.               */
@@ -38,5 +40,7 @@ void input (char *);
 
 void writexy(unsigned char, unsigned char, const char *);
 void clearxy(void);
+
+void execute_program(void *program_address);
 
 #endif  /* KLIB_H  */

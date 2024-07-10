@@ -89,4 +89,19 @@ int strcmp(const char *s1, const char *s2)
   return (*s1 - *s2);
 }
 
+void execute_program(void *program_address) {
+  __asm__ volatile(
+    "call save_return_address \n"
+    "original_address: \n"
+    " push %%ebx \n"
+    " jmp %[programAddress] \n"
+    "save_return_address: \n"
+    " mov (%%esp), %%ebx \n"
+    " mov $program_end, %%ecx\n"
+    " sub $original_address, %%ecx\n"
+    " add %%ecx, %%ebx\n"
+    " ret \n"
+    "program_end: \n"
 
+    ::[programAddress] "r" (program_address));
+}
